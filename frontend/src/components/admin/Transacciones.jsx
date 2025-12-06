@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form, Table, Badge, Alert } from 'react-bootstrap';
 import { FaPlus, FaEye, FaMoneyBillWave, FaCar, FaGem, FaEdit, FaTrash } from 'react-icons/fa';
+import API_URL from '../../config';
 
 const Transacciones = () => {
   const [transacciones, setTransacciones] = useState([]);
@@ -48,12 +49,12 @@ const Transacciones = () => {
   const cargarUsuarioActual = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/usuarios/me', {
+      const response = await fetch(`${API_URL}/usuarios/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setCurrentUser(data);
@@ -71,12 +72,12 @@ const Transacciones = () => {
       if (filtros.sede_id) params.append('sede_id', filtros.sede_id);
       if (filtros.usuario_id) params.append('usuario_id', filtros.usuario_id);
 
-      const response = await fetch(`http://localhost:8000/transacciones?${params}`, {
+      const response = await fetch(`${API_URL}/transacciones?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setTransacciones(data);
@@ -89,12 +90,12 @@ const Transacciones = () => {
   const cargarVehiculos = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/vehiculos/', {
+      const response = await fetch(`${API_URL}/vehiculos/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setVehiculos(data);
@@ -108,12 +109,12 @@ const Transacciones = () => {
   const cargarArticulos = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/articulos_valor/', {
+      const response = await fetch(`${API_URL}/articulos_valor/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setArticulos(data);
@@ -129,12 +130,12 @@ const Transacciones = () => {
   const cargarSedes = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/sedes', {
+      const response = await fetch(`${API_URL}/sedes`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setSedes(data);
@@ -147,12 +148,12 @@ const Transacciones = () => {
   const cargarUsuarios = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/usuarios', {
+      const response = await fetch(`${API_URL}/usuarios`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setUsuarios(data);
@@ -178,7 +179,7 @@ const Transacciones = () => {
         articulo_id: formData.articulo_id ? parseInt(formData.articulo_id) : null
       };
 
-      const response = await fetch('http://localhost:8000/transacciones', {
+      const response = await fetch(`${API_URL}/transacciones`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +223,7 @@ const Transacciones = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Si cambia el tipo de transacción, limpiar los campos relacionados
     if (name === 'tipo') {
       setFormData(prev => ({
@@ -275,10 +276,10 @@ const Transacciones = () => {
       'empeño_articulo': { variant: 'warning', text: 'Empeño', icon: FaGem },
       'recuperacion_empeño': { variant: 'info', text: 'Recuperación', icon: FaGem }
     };
-    
+
     const config = tipos[tipo] || { variant: 'secondary', text: tipo, icon: FaMoneyBillWave };
     const IconComponent = config.icon;
-    
+
     return (
       <Badge bg={config.variant} className="d-flex align-items-center gap-1">
         <IconComponent size={12} />
@@ -324,7 +325,7 @@ const Transacciones = () => {
         articulo_id: formData.articulo_id ? parseInt(formData.articulo_id) : null
       };
 
-      const response = await fetch(`http://localhost:8000/transacciones/${editingTransaccion.id}`, {
+      const response = await fetch(`${API_URL}/transacciones/${editingTransaccion.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -360,7 +361,7 @@ const Transacciones = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8000/transacciones/${deletingTransaccion.id}`, {
+      const response = await fetch(`${API_URL}/transacciones/${deletingTransaccion.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -530,7 +531,7 @@ const Transacciones = () => {
                   ))}
                 </tbody>
               </Table>
-              
+
               {transacciones.length === 0 && (
                 <div className="text-center py-4">
                   <p className="text-muted">No hay transacciones registradas</p>
@@ -603,14 +604,14 @@ const Transacciones = () => {
                 {['venta_articulo', 'empeño_articulo', 'recuperacion_empeño'].includes(formData.tipo) && (
                   <Form.Group className="mb-3">
                     <Form.Label>
-                      Artículo * 
-                      {formData.tipo === 'recuperacion_empeño' && 
+                      Artículo *
+                      {formData.tipo === 'recuperacion_empeño' &&
                         ` (${articulos.filter(a => a.estado === 'empeño').length} artículos en empeño)`
                       }
-                      {formData.tipo === 'venta_articulo' && 
+                      {formData.tipo === 'venta_articulo' &&
                         ` (${articulos.filter(a => a.estado === 'disponible').length} artículos disponibles)`
                       }
-                      {formData.tipo === 'empeño_articulo' && 
+                      {formData.tipo === 'empeño_articulo' &&
                         ` (${articulos.filter(a => a.estado === 'disponible').length} artículos disponibles)`
                       }
                     </Form.Label>

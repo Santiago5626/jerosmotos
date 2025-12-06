@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Form, 
-  Alert, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Form,
+  Alert,
   Spinner,
   Badge
 } from 'react-bootstrap';
 import { FaChartBar, FaDownload, FaCalendarAlt, FaFilter } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../../config';
 import * as XLSX from 'xlsx';
 
 const Reportes = () => {
-  // URL base de la API
-  const API_BASE_URL = 'http://localhost:8000';
+  // API_URL ahora se importa de config
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [reportData, setReportData] = useState(null);
   const [sedes, setSedes] = useState([]);
-  
+
   const [filters, setFilters] = useState({
     fechaInicio: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
     fechaFin: new Date().toISOString().split('T')[0],
@@ -67,7 +67,7 @@ const Reportes = () => {
 
   const loadSedes = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/sedes/`);
+      const response = await axios.get(`${API_URL}/sedes/`);
       setSedes(response.data);
     } catch (error) {
       console.error('Error cargando sedes:', error);
@@ -85,13 +85,13 @@ const Reportes = () => {
   const generateReport = async () => {
     setLoading(true);
     setError('');
-    
+
     try {
       // Cargar datos necesarios para el reporte
       const [vehiculosRes, articulosRes, mantenimientosRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/vehiculos/`),
-        axios.get(`${API_BASE_URL}/articulos_valor/`),
-        axios.get(`${API_BASE_URL}/mantenimientos/`)
+        axios.get(`${API_URL}/vehiculos/`),
+        axios.get(`${API_URL}/articulos_valor/`),
+        axios.get(`${API_URL}/mantenimientos/`)
       ]);
 
       const vehiculos = vehiculosRes.data;
@@ -99,7 +99,7 @@ const Reportes = () => {
       const mantenimientos = mantenimientosRes.data;
 
       // Filtrar por sede si se especifica
-      const vehiculosFiltrados = filters.sedeId 
+      const vehiculosFiltrados = filters.sedeId
         ? vehiculos.filter(v => v.sede_id === parseInt(filters.sedeId))
         : vehiculos;
 
@@ -148,13 +148,13 @@ const Reportes = () => {
 
     const valorInventarioVehiculos = vehiculosDisponibles.reduce((sum, v) => sum + parseFloat(v.precio_venta || 0), 0);
     const valorInventarioArticulos = articulos.filter(a => a.estado === 'disponible').reduce((sum, a) => sum + parseFloat(a.valor || 0), 0);
-    
+
     const ingresosPorVentas = vehiculosVendidos.reduce((sum, v) => sum + parseFloat(v.precio_venta || 0), 0) +
-                             articulosVendidos.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0);
-    
+      articulosVendidos.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0);
+
     const costoMantenimientos = mantenimientos.reduce((sum, m) => sum + parseFloat(m.costo || 0), 0);
     const costoCompraVehiculos = vehiculosVendidos.reduce((sum, v) => sum + parseFloat(v.precio_compra || 0), 0);
-    
+
     const gananciaBruta = ingresosPorVentas - costoCompraVehiculos;
     const gananciaNeta = gananciaBruta - costoMantenimientos;
 
@@ -184,7 +184,7 @@ const Reportes = () => {
 
   const generateVehiculosReport = (vehiculos) => {
     const vehiculosVendidos = vehiculos.filter(v => v.estado === 'vendido');
-    
+
     return {
       tipo: 'vehiculos',
       resumen: {
@@ -199,7 +199,7 @@ const Reportes = () => {
   const generateInventarioReport = (vehiculos, articulos) => {
     const vehiculosDisponibles = vehiculos.filter(v => v.estado === 'disponible');
     const articulosDisponibles = articulos.filter(a => a.estado === 'disponible');
-    
+
     return {
       tipo: 'inventario',
       resumen: {
@@ -218,13 +218,13 @@ const Reportes = () => {
   const generateGananciasReport = (vehiculos, articulos, mantenimientos) => {
     const vehiculosVendidos = vehiculos.filter(v => v.estado === 'vendido');
     const articulosVendidos = articulos.filter(a => a.estado === 'vendido');
-    
+
     const ingresosPorVentas = vehiculosVendidos.reduce((sum, v) => sum + parseFloat(v.precio_venta || 0), 0) +
-                             articulosVendidos.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0);
-    
+      articulosVendidos.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0);
+
     const costoCompras = vehiculosVendidos.reduce((sum, v) => sum + parseFloat(v.precio_compra || 0), 0);
     const costoMantenimientos = mantenimientos.reduce((sum, m) => sum + parseFloat(m.costo || 0), 0);
-    
+
     return {
       tipo: 'ganancias',
       resumen: {
@@ -244,7 +244,7 @@ const Reportes = () => {
   const generateEmpenosReport = (vehiculos, articulos) => {
     const vehiculosEmpeno = vehiculos.filter(v => v.estado === 'empeño');
     const articulosEmpeno = articulos.filter(a => a.estado === 'empeño');
-    
+
     // Para vehículos en empeño, el valor del empeño está en precio_compra (valor_empeno)
     // y la tasa de interés en precio_venta (interes_porcentaje)
     return {
@@ -253,7 +253,7 @@ const Reportes = () => {
         vehiculosEnEmpeno: vehiculosEmpeno.length,
         articulosEnEmpeno: articulosEmpeno.length,
         valorTotalEmpenos: vehiculosEmpeno.reduce((sum, v) => sum + parseFloat(v.precio_compra || 0), 0) +
-                          articulosEmpeno.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0)
+          articulosEmpeno.reduce((sum, a) => sum + parseFloat(a.valor || 0), 0)
       },
       detalles: {
         vehiculos: vehiculosEmpeno,
@@ -286,7 +286,7 @@ const Reportes = () => {
     // Cargar datos de vehículos para poder hacer la búsqueda en mantenimientos
     let vehiculos = [];
     try {
-      const vehiculosRes = await axios.get(`${API_BASE_URL}/vehiculos/`);
+      const vehiculosRes = await axios.get(`${API_URL}/vehiculos/`);
       vehiculos = vehiculosRes.data;
     } catch (error) {
       console.error('Error cargando vehículos para reporte:', error);
@@ -294,35 +294,35 @@ const Reportes = () => {
 
     // Crear un nuevo libro de trabajo
     const workbook = XLSX.utils.book_new();
-    
+
     // Función para aplicar estilos a los títulos
     const applyHeaderStyles = (worksheet, range) => {
       if (!worksheet['!cols']) worksheet['!cols'] = [];
       if (!worksheet['!rows']) worksheet['!rows'] = [];
-      
+
       // Aplicar estilos a las celdas de encabezado
       for (let R = range.s.r; R <= range.e.r; ++R) {
         for (let C = range.s.c; C <= range.e.c; ++C) {
-          const cell_address = XLSX.utils.encode_cell({c: C, r: R});
+          const cell_address = XLSX.utils.encode_cell({ c: C, r: R });
           if (!worksheet[cell_address]) continue;
-          
+
           // Aplicar negrita a títulos principales y encabezados
-          if (worksheet[cell_address].v && 
-              (worksheet[cell_address].v.toString().includes('REPORTE') ||
-               worksheet[cell_address].v.toString().includes('RESUMEN') ||
-               worksheet[cell_address].v.toString().includes('ANÁLISIS') ||
-               worksheet[cell_address].v.toString().includes('DETALLE') ||
-               worksheet[cell_address].v.toString().includes('INFORMACIÓN') ||
-               worksheet[cell_address].v === 'Marca/Modelo' ||
-               worksheet[cell_address].v === 'Placa' ||
-               worksheet[cell_address].v === 'Descripción' ||
-               worksheet[cell_address].v === 'Categoría' ||
-               worksheet[cell_address].v === 'Métrica' ||
-               worksheet[cell_address].v === 'Concepto' ||
-               worksheet[cell_address].v === 'Tipo de Reporte:' ||
-               worksheet[cell_address].v === 'Sede Analizada:' ||
-               worksheet[cell_address].v === 'Período de Análisis:')) {
-            
+          if (worksheet[cell_address].v &&
+            (worksheet[cell_address].v.toString().includes('REPORTE') ||
+              worksheet[cell_address].v.toString().includes('RESUMEN') ||
+              worksheet[cell_address].v.toString().includes('ANÁLISIS') ||
+              worksheet[cell_address].v.toString().includes('DETALLE') ||
+              worksheet[cell_address].v.toString().includes('INFORMACIÓN') ||
+              worksheet[cell_address].v === 'Marca/Modelo' ||
+              worksheet[cell_address].v === 'Placa' ||
+              worksheet[cell_address].v === 'Descripción' ||
+              worksheet[cell_address].v === 'Categoría' ||
+              worksheet[cell_address].v === 'Métrica' ||
+              worksheet[cell_address].v === 'Concepto' ||
+              worksheet[cell_address].v === 'Tipo de Reporte:' ||
+              worksheet[cell_address].v === 'Sede Analizada:' ||
+              worksheet[cell_address].v === 'Período de Análisis:')) {
+
             worksheet[cell_address].s = {
               font: { bold: true, sz: 12 },
               alignment: { horizontal: 'center', vertical: 'center' }
@@ -331,7 +331,7 @@ const Reportes = () => {
         }
       }
     };
-    
+
     // Información del reporte más detallada
     const reportInfo = [
       ['REPORTE DETALLADO - GERO\' MOTOS'],
@@ -340,10 +340,10 @@ const Reportes = () => {
       ['Tipo de Reporte:', tiposReporte.find(t => t.value === filters.tipoReporte)?.label],
       ['Sede Analizada:', getSedeName(parseInt(filters.sedeId))],
       ['Período de Análisis:', `${filters.fechaInicio} a ${filters.fechaFin}`],
-      ['Fecha de Generación:', new Date().toLocaleDateString('es-CO', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
+      ['Fecha de Generación:', new Date().toLocaleDateString('es-CO', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -380,13 +380,13 @@ const Reportes = () => {
         ['Costo Mantenimientos', reportData.resumen.costoMantenimientos, 'Gastos operativos'],
         ['Ganancia Neta', reportData.resumen.gananciaNeta, 'Ganancia final después de gastos']
       ];
-      
+
       const resumenSheet = XLSX.utils.aoa_to_sheet(resumenEjecutivo);
-      
+
       // Aplicar estilos a los encabezados
       const range = XLSX.utils.decode_range(resumenSheet['!ref']);
       applyHeaderStyles(resumenSheet, range);
-      
+
       // Ajustar ancho de columnas
       resumenSheet['!cols'] = [
         { width: 20 }, // Categoría
@@ -394,7 +394,7 @@ const Reportes = () => {
         { width: 20 }, // Valor
         { width: 15 }  // Porcentaje
       ];
-      
+
       XLSX.utils.book_append_sheet(workbook, resumenSheet, 'Resumen Ejecutivo');
 
       // Hoja 2: Detalle de Vehículos Vendidos
@@ -426,13 +426,13 @@ const Reportes = () => {
           ['Costo Total Compras:', reportData.detalles.vehiculosVendidos.reduce((sum, v) => sum + (v.precio_compra || 0), 0)],
           ['Ganancia Total:', reportData.detalles.vehiculosVendidos.reduce((sum, v) => sum + ((v.precio_venta || 0) - (v.precio_compra || 0)), 0)]
         ];
-        
+
         const vehiculosVendidosSheet = XLSX.utils.aoa_to_sheet(vehiculosVendidosData);
-        
+
         // Aplicar estilos
         const range = XLSX.utils.decode_range(vehiculosVendidosSheet['!ref']);
         applyHeaderStyles(vehiculosVendidosSheet, range);
-        
+
         // Ajustar ancho de columnas
         vehiculosVendidosSheet['!cols'] = [
           { width: 20 }, // Marca/Modelo
@@ -446,7 +446,7 @@ const Reportes = () => {
           { width: 15 }, // Sede
           { width: 10 }  // Estado
         ];
-        
+
         XLSX.utils.book_append_sheet(workbook, vehiculosVendidosSheet, 'Vehículos Vendidos');
       }
 
@@ -457,7 +457,7 @@ const Reportes = () => {
           [],
           ['Descripción', 'Tipo', 'Valor', 'Fecha Ingreso', 'Sede', 'Estado', 'Días en Inventario'],
           ...reportData.detalles.articulosVendidos.map(articulo => {
-            const diasInventario = articulo.fecha_ingreso ? 
+            const diasInventario = articulo.fecha_ingreso ?
               Math.floor((new Date() - new Date(articulo.fecha_ingreso)) / (1000 * 60 * 60 * 24)) : 0;
             return [
               articulo.descripcion || '',
@@ -474,13 +474,13 @@ const Reportes = () => {
           ['Total Artículos Vendidos:', reportData.detalles.articulosVendidos.length],
           ['Valor Total:', reportData.detalles.articulosVendidos.reduce((sum, a) => sum + (a.valor || 0), 0)]
         ];
-        
+
         const articulosVendidosSheet = XLSX.utils.aoa_to_sheet(articulosVendidosData);
-        
+
         // Aplicar estilos
         const range = XLSX.utils.decode_range(articulosVendidosSheet['!ref']);
         applyHeaderStyles(articulosVendidosSheet, range);
-        
+
         // Ajustar ancho de columnas
         articulosVendidosSheet['!cols'] = [
           { width: 25 }, // Descripción
@@ -491,7 +491,7 @@ const Reportes = () => {
           { width: 10 }, // Estado
           { width: 12 }  // Días en Inventario
         ];
-        
+
         XLSX.utils.book_append_sheet(workbook, articulosVendidosSheet, 'Artículos Vendidos');
       }
 
@@ -505,7 +505,7 @@ const Reportes = () => {
             // Buscar el vehículo correspondiente en los datos cargados
             const vehiculo = vehiculos.find(v => v.id === mant.vehiculo_id);
             const vehiculoInfo = vehiculo ? formatCleanText(vehiculo.marca, vehiculo.modelo, vehiculo.placa) : 'Vehículo no encontrado';
-            
+
             return [
               vehiculoInfo,
               getCleanValue(mant.servicio),
@@ -521,13 +521,13 @@ const Reportes = () => {
           ['Total Mantenimientos:', reportData.detalles.mantenimientosRecientes.length],
           ['Costo Total:', reportData.detalles.mantenimientosRecientes.reduce((sum, m) => sum + (m.costo || 0), 0)]
         ];
-        
+
         const mantenimientosSheet = XLSX.utils.aoa_to_sheet(mantenimientosData);
-        
+
         // Aplicar estilos
         const range = XLSX.utils.decode_range(mantenimientosSheet['!ref']);
         applyHeaderStyles(mantenimientosSheet, range);
-        
+
         // Ajustar ancho de columnas
         mantenimientosSheet['!cols'] = [
           { width: 20 }, // Vehículo
@@ -538,7 +538,7 @@ const Reportes = () => {
           { width: 20 }, // Taller
           { width: 18 }  // Próximo Mantenimiento
         ];
-        
+
         XLSX.utils.book_append_sheet(workbook, mantenimientosSheet, 'Mantenimientos');
       }
 
@@ -552,23 +552,23 @@ const Reportes = () => {
         ['RESUMEN POR CATEGORÍA'],
         [],
         ['Categoría', 'Cantidad', 'Valor Total (COP)', 'Valor Promedio', 'Porcentaje del Total'],
-        ['Vehículos Disponibles', 
-         reportData.resumen.vehiculosDisponibles, 
-         reportData.resumen.valorVehiculos,
-         reportData.resumen.vehiculosDisponibles > 0 ? (reportData.resumen.valorVehiculos / reportData.resumen.vehiculosDisponibles).toFixed(0) : 0,
-         totalInventario > 0 ? `${((reportData.resumen.valorVehiculos / totalInventario) * 100).toFixed(1)}%` : '0%'
+        ['Vehículos Disponibles',
+          reportData.resumen.vehiculosDisponibles,
+          reportData.resumen.valorVehiculos,
+          reportData.resumen.vehiculosDisponibles > 0 ? (reportData.resumen.valorVehiculos / reportData.resumen.vehiculosDisponibles).toFixed(0) : 0,
+          totalInventario > 0 ? `${((reportData.resumen.valorVehiculos / totalInventario) * 100).toFixed(1)}%` : '0%'
         ],
-        ['Artículos Disponibles', 
-         reportData.resumen.articulosDisponibles, 
-         reportData.resumen.valorArticulos,
-         reportData.resumen.articulosDisponibles > 0 ? (reportData.resumen.valorArticulos / reportData.resumen.articulosDisponibles).toFixed(0) : 0,
-         totalInventario > 0 ? `${((reportData.resumen.valorArticulos / totalInventario) * 100).toFixed(1)}%` : '0%'
+        ['Artículos Disponibles',
+          reportData.resumen.articulosDisponibles,
+          reportData.resumen.valorArticulos,
+          reportData.resumen.articulosDisponibles > 0 ? (reportData.resumen.valorArticulos / reportData.resumen.articulosDisponibles).toFixed(0) : 0,
+          totalInventario > 0 ? `${((reportData.resumen.valorArticulos / totalInventario) * 100).toFixed(1)}%` : '0%'
         ],
         [],
-        ['TOTAL INVENTARIO', 
-         reportData.resumen.vehiculosDisponibles + reportData.resumen.articulosDisponibles, 
-         totalInventario,
-         '', '100%'
+        ['TOTAL INVENTARIO',
+          reportData.resumen.vehiculosDisponibles + reportData.resumen.articulosDisponibles,
+          totalInventario,
+          '', '100%'
         ],
         [],
         ['INFORMACIÓN ADICIONAL'],
@@ -578,13 +578,13 @@ const Reportes = () => {
         ['Items Únicos en Stock', reportData.resumen.vehiculosDisponibles + reportData.resumen.articulosDisponibles],
         ['Fecha del Reporte', new Date().toLocaleDateString('es-CO')]
       ];
-      
+
       const resumenSheet = XLSX.utils.aoa_to_sheet(resumenData);
-      
+
       // Aplicar estilos
       const range = XLSX.utils.decode_range(resumenSheet['!ref']);
       applyHeaderStyles(resumenSheet, range);
-      
+
       // Ajustar ancho de columnas
       resumenSheet['!cols'] = [
         { width: 25 }, // Categoría
@@ -593,7 +593,7 @@ const Reportes = () => {
         { width: 15 }, // Valor Promedio
         { width: 18 }  // Porcentaje del Total
       ];
-      
+
       XLSX.utils.book_append_sheet(workbook, resumenSheet, 'Resumen Inventario');
 
       // Hoja 2: Vehículos Disponibles Detallado
@@ -616,13 +616,13 @@ const Reportes = () => {
             ];
           })
         ];
-        
+
         const vehiculosSheet = XLSX.utils.aoa_to_sheet(vehiculosData);
-        
+
         // Aplicar estilos
         const range = XLSX.utils.decode_range(vehiculosSheet['!ref']);
         applyHeaderStyles(vehiculosSheet, range);
-        
+
         // Ajustar ancho de columnas
         vehiculosSheet['!cols'] = [
           { width: 20 }, // Marca/Modelo
@@ -634,7 +634,7 @@ const Reportes = () => {
           { width: 25 }, // Observaciones
           { width: 15 }  // Sede
         ];
-        
+
         XLSX.utils.book_append_sheet(workbook, vehiculosSheet, 'Vehículos Detalle');
       }
 
@@ -659,13 +659,13 @@ const Reportes = () => {
             ];
           })
         ];
-        
+
         const articulosSheet = XLSX.utils.aoa_to_sheet(articulosData);
-        
+
         // Aplicar estilos
         const range = XLSX.utils.decode_range(articulosSheet['!ref']);
         applyHeaderStyles(articulosSheet, range);
-        
+
         // Ajustar ancho de columnas
         articulosSheet['!cols'] = [
           { width: 25 }, // Descripción
@@ -678,7 +678,7 @@ const Reportes = () => {
           { width: 25 }, // Observaciones
           { width: 15 }  // Sede
         ];
-        
+
         XLSX.utils.book_append_sheet(workbook, articulosSheet, 'Artículos Detalle');
       }
 
@@ -720,13 +720,13 @@ const Reportes = () => {
           ];
         })
       ];
-      
+
       const worksheet = XLSX.utils.aoa_to_sheet(vehiculosData);
-      
+
       // Aplicar estilos
       const range = XLSX.utils.decode_range(worksheet['!ref']);
       applyHeaderStyles(worksheet, range);
-      
+
       // Ajustar ancho de columnas
       worksheet['!cols'] = [
         { width: 20 }, // Marca/Modelo
@@ -740,7 +740,7 @@ const Reportes = () => {
         { width: 15 }, // Sede
         { width: 12 }  // Días en Stock
       ];
-      
+
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Vehículos Vendidos');
 
     } else if (reportData.tipo === 'ganancias') {
@@ -769,20 +769,20 @@ const Reportes = () => {
         ['Ganancia Bruta', reportData.resumen.gananciaBruta, reportData.resumen.ingresosTotales > 0 ? `${((reportData.resumen.gananciaBruta / reportData.resumen.ingresosTotales) * 100).toFixed(2)}%` : '0%'],
         ['Ganancia Neta', reportData.resumen.gananciaNeta, reportData.resumen.ingresosTotales > 0 ? `${((reportData.resumen.gananciaNeta / reportData.resumen.ingresosTotales) * 100).toFixed(2)}%` : '0%']
       ];
-      
+
       const worksheet = XLSX.utils.aoa_to_sheet(gananciasData);
-      
+
       // Aplicar estilos
       const range = XLSX.utils.decode_range(worksheet['!ref']);
       applyHeaderStyles(worksheet, range);
-      
+
       // Ajustar ancho de columnas
       worksheet['!cols'] = [
         { width: 25 }, // Concepto
         { width: 20 }, // Valor (COP)
         { width: 15 }  // Porcentaje
       ];
-      
+
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Análisis Ganancias');
 
     } else if (reportData.tipo === 'empenos') {
@@ -830,13 +830,13 @@ const Reportes = () => {
           ];
         })
       ];
-      
+
       const worksheet = XLSX.utils.aoa_to_sheet(empenosData);
-      
+
       // Aplicar estilos
       const range = XLSX.utils.decode_range(worksheet['!ref']);
       applyHeaderStyles(worksheet, range);
-      
+
       // Ajustar ancho de columnas
       worksheet['!cols'] = [
         { width: 20 }, // Marca/Modelo o Descripción
@@ -847,7 +847,7 @@ const Reportes = () => {
         { width: 15 }, // Sede o Días en Empeño
         { width: 12 }  // Días en Empeño
       ];
-      
+
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Empeños Activos');
     }
 
@@ -983,8 +983,8 @@ const Reportes = () => {
             <Card.Header>
               <h5 className="mb-0">Resumen del Reporte</h5>
               <small className="text-muted">
-                {tiposReporte.find(t => t.value === filters.tipoReporte)?.label} - 
-                {getSedeName(parseInt(filters.sedeId))} - 
+                {tiposReporte.find(t => t.value === filters.tipoReporte)?.label} -
+                {getSedeName(parseInt(filters.sedeId))} -
                 {formatDate(filters.fechaInicio)} a {formatDate(filters.fechaFin)}
               </small>
             </Card.Header>
@@ -1234,16 +1234,16 @@ const Reportes = () => {
                   </>
                 )}
 
-                {reportData.detalles && 
-                 ((Array.isArray(reportData.detalles) && reportData.detalles.length === 0) ||
-                  (reportData.tipo === 'inventario' && 
-                   reportData.detalles.vehiculos && reportData.detalles.articulos &&
-                   reportData.detalles.vehiculos.length === 0 && 
-                   reportData.detalles.articulos.length === 0)) && (
-                  <div className="text-center py-4">
-                    <p className="text-muted">No hay datos para mostrar en el período seleccionado</p>
-                  </div>
-                )}
+                {reportData.detalles &&
+                  ((Array.isArray(reportData.detalles) && reportData.detalles.length === 0) ||
+                    (reportData.tipo === 'inventario' &&
+                      reportData.detalles.vehiculos && reportData.detalles.articulos &&
+                      reportData.detalles.vehiculos.length === 0 &&
+                      reportData.detalles.articulos.length === 0)) && (
+                    <div className="text-center py-4">
+                      <p className="text-muted">No hay datos para mostrar en el período seleccionado</p>
+                    </div>
+                  )}
               </Card.Body>
             </Card>
           )}

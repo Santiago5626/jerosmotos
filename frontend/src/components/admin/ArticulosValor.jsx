@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Modal, 
-  Form, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
   Spinner,
   Badge,
   InputGroup,
@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaGem, FaSearch, FaFilter, FaImage, FaTimes, FaPercent, FaMoneyBillWave, FaClock, FaCalculator } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../../config';
 import { useAuth } from '../../context/AuthContext';
 import useAlert from '../../hooks/useAlert';
 
@@ -29,7 +30,7 @@ const ArticulosValor = () => {
   const [editingArticulo, setEditingArticulo] = useState(null);
   const [articuloAbono, setArticuloAbono] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [filterEstado, setFilterEstado] = useState('');
@@ -70,8 +71,8 @@ const ArticulosValor = () => {
     try {
       setLoading(true);
       const [articulosRes, sedesRes] = await Promise.all([
-        axios.get('http://localhost:8000/articulos_valor/'),
-        axios.get('http://localhost:8000/sedes/')
+        axios.get(`${API_URL}/articulos_valor/`),
+        axios.get(`${API_URL}/sedes/`)
       ]);
       setArticulos(articulosRes.data);
       setSedes(sedesRes.data);
@@ -97,12 +98,12 @@ const ArticulosValor = () => {
         cliente_telefono: articulo.cliente_telefono || '',
         cliente_documento: articulo.cliente_documento || ''
       });
-      
+
       // Cargar imágenes existentes del artículo
       try {
-        const imagenesResponse = await axios.get(`http://localhost:8000/articulos_valor/${articulo.id}/imagenes`);
+        const imagenesResponse = await axios.get(`${API_URL}/articulos_valor/${articulo.id}/imagenes`);
         const imagenesExistentes = imagenesResponse.data;
-        
+
         if (imagenesExistentes.length > 0) {
           const previews = imagenesExistentes.map(img => `data:image/jpeg;base64,${img.imagen_data}`);
           setImagePreviews(previews);
@@ -159,7 +160,7 @@ const ArticulosValor = () => {
     if (files.length > 0) {
       const newImages = [...selectedImages, ...files];
       setSelectedImages(newImages);
-      
+
       const newPreviews = files.map(file => {
         return new Promise((resolve) => {
           const reader = new FileReader();
@@ -167,12 +168,12 @@ const ArticulosValor = () => {
           reader.readAsDataURL(file);
         });
       });
-      
+
       Promise.all(newPreviews).then(newPreviewsArray => {
         setImagePreviews(prev => [...prev, ...newPreviewsArray]);
       });
     }
-    
+
     e.target.value = '';
   };
 
@@ -213,10 +214,10 @@ const ArticulosValor = () => {
 
       let articuloId;
       if (editingArticulo) {
-        await axios.put(`http://localhost:8000/articulos_valor/${editingArticulo.id}`, dataToSend);
+        await axios.put(`${API_URL}/articulos_valor/${editingArticulo.id}`, dataToSend);
         articuloId = editingArticulo.id;
       } else {
-        const response = await axios.post('http://localhost:8000/articulos_valor/', dataToSend);
+        const response = await axios.post(`${API_URL}/articulos_valor/`, dataToSend);
         articuloId = response.data.id;
       }
 
@@ -226,15 +227,15 @@ const ArticulosValor = () => {
           const formData = new FormData();
           formData.append('imagen', selectedImages[i]);
           formData.append('es_principal', i === 0 ? 'true' : 'false');
-          
-          await axios.post(`http://localhost:8000/articulos_valor/${articuloId}/imagenes`, formData, {
+
+          await axios.post(`${API_URL}/articulos_valor/${articuloId}/imagenes`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           });
         }
       }
-      
+
       await loadData();
       handleCloseModal();
       alert.showSuccess('¡Éxito!', editingArticulo ? 'Artículo actualizado correctamente' : 'Artículo creado correctamente');
@@ -252,9 +253,9 @@ const ArticulosValor = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/articulos_valor/${articuloAbono.id}/abono?monto_abono=${parseFloat(abonoData.monto)}`
+        `${API_URL}/articulos_valor/${articuloAbono.id}/abono?monto_abono=${parseFloat(abonoData.monto)}`
       );
-      
+
       alert.showSuccess('¡Abono procesado!', response.data.mensaje);
       await loadData();
       handleCloseAbonoModal();
@@ -270,7 +271,7 @@ const ArticulosValor = () => {
     const result = await alert.showDeleteConfirm();
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/articulos_valor/${articuloId}`);
+        await axios.delete(`${API_URL}/articulos_valor/${articuloId}`);
         await loadData();
         alert.showSuccess('¡Eliminado!', 'El artículo ha sido eliminado correctamente');
       } catch (error) {
@@ -310,10 +311,10 @@ const ArticulosValor = () => {
 
   // Filtrar artículos
   const filteredArticulos = articulos.filter(articulo => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       articulo.descripcion?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       articulo.cliente_nombre?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesEstado = !filterEstado || articulo.estado === filterEstado;
     const matchesSede = !filterSede || articulo.sede_id === parseInt(filterSede);
     const matchesFecha = !filterFecha || articulo.fecha_registro === filterFecha;
@@ -763,9 +764,9 @@ const ArticulosValor = () => {
                           src={preview}
                           alt={`Preview ${index + 1}`}
                           className="img-fluid rounded"
-                          style={{ 
-                            width: '100%', 
-                            height: '120px', 
+                          style={{
+                            width: '100%',
+                            height: '120px',
                             objectFit: 'cover',
                             border: '2px solid #dee2e6'
                           }}
@@ -776,9 +777,9 @@ const ArticulosValor = () => {
                             size="sm"
                             className="position-absolute top-0 end-0 m-1"
                             onClick={() => removeImage(index)}
-                            style={{ 
-                              width: '25px', 
-                              height: '25px', 
+                            style={{
+                              width: '25px',
+                              height: '25px',
                               padding: '0',
                               display: 'flex',
                               alignItems: 'center',

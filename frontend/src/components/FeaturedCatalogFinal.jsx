@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight, FaGasPump, FaPalette } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../config';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './FeaturedCatalog.css';
 
@@ -39,8 +40,8 @@ const FeaturedCatalog = () => {
     try {
       setLoading(true);
       // Obtener vehículos visibles en el catálogo público
-      const vehiculosResponse = await axios.get('http://localhost:8000/vehiculos/catalogo/publico');
-      const vehiculosDisponibles = vehiculosResponse.data.filter(vehiculo => 
+      const vehiculosResponse = await axios.get(`${API_URL}/vehiculos/catalogo/publico`);
+      const vehiculosDisponibles = vehiculosResponse.data.filter(vehiculo =>
         vehiculo.destacado
       );
 
@@ -48,14 +49,14 @@ const FeaturedCatalog = () => {
       const vehiculosConImagenes = await Promise.all(
         vehiculosDisponibles.slice(0, 6).map(async (vehiculo) => {
           try {
-            const imagenesResponse = await axios.get(`http://localhost:8000/vehiculos/${vehiculo.id}/imagenes`);
+            const imagenesResponse = await axios.get(`${API_URL}/vehiculos/${vehiculo.id}/imagenes`);
             const imagenes = imagenesResponse.data;
             const imagenPrincipal = imagenes.find(img => img.es_principal) || imagenes[0];
-            
+
             return {
               ...vehiculo,
-              foto: imagenPrincipal ? `data:image/jpeg;base64,${imagenPrincipal.imagen_data}` : 
-                    'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80'
+              foto: imagenPrincipal ? `data:image/jpeg;base64,${imagenPrincipal.imagen_data}` :
+                'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80'
             };
           } catch (error) {
             console.error(`Error cargando imágenes para vehículo ${vehiculo.id}:`, error);
@@ -125,12 +126,12 @@ const FeaturedCatalog = () => {
 
   const handleManualScroll = (direction) => {
     setHasUserInteracted(true);
-    
+
     // Pausar auto-scroll cuando el usuario interactúa manualmente
     if (autoScrollRef.current) {
       clearInterval(autoScrollRef.current);
     }
-    
+
     if (direction === 'next') {
       scrollToNext();
     } else {
@@ -156,7 +157,7 @@ const FeaturedCatalog = () => {
 
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
-    
+
     const distance = touchStartX.current - touchEndX.current;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -280,9 +281,9 @@ const FeaturedCatalog = () => {
                 <Link to={`/vehiculo/${vehiculo.id}`} className="text-decoration-none">
                   <div className="catalog-card h-100">
                     <div className="card-image-container">
-                      <img 
-                        src={vehiculo.foto} 
-                        className="card-img-top" 
+                      <img
+                        src={vehiculo.foto}
+                        className="card-img-top"
                         alt={`${vehiculo.marca} ${vehiculo.modelo}`}
                       />
                       <div className="card-overlay">
@@ -291,7 +292,7 @@ const FeaturedCatalog = () => {
 
                     <div className="card-body">
                       <h5 className="card-title">{vehiculo.marca} {vehiculo.modelo}</h5>
-                      
+
                       <div className="vehicle-details">
                         {vehiculo.cilindraje && (
                           <div className="detail-item">

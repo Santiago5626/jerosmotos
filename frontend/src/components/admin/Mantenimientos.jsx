@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Modal, 
-  Form, 
-  Alert, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Alert,
   Spinner,
   Badge,
   InputGroup,
@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaWrench, FaSearch, FaFilter } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../../config';
 import { useAuth } from '../../context/AuthContext';
 
 const Mantenimientos = () => {
@@ -26,7 +27,7 @@ const Mantenimientos = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingMantenimiento, setEditingMantenimiento] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [filterVehiculo, setFilterVehiculo] = useState('');
@@ -49,8 +50,8 @@ const Mantenimientos = () => {
     try {
       setLoading(true);
       const [mantenimientosRes, vehiculosRes] = await Promise.all([
-        axios.get('http://localhost:8000/mantenimientos/'),
-        axios.get('http://localhost:8000/vehiculos/')
+        axios.get(`${API_URL}/mantenimientos/`),
+        axios.get(`${API_URL}/vehiculos/`)
       ]);
       setMantenimientos(mantenimientosRes.data);
       setVehiculos(vehiculosRes.data);
@@ -114,11 +115,11 @@ const Mantenimientos = () => {
       };
 
       if (editingMantenimiento) {
-        await axios.put(`http://localhost:8000/mantenimientos/${editingMantenimiento.id}`, dataToSend);
+        await axios.put(`${API_URL}/mantenimientos/${editingMantenimiento.id}`, dataToSend);
       } else {
-        await axios.post('http://localhost:8000/mantenimientos/', dataToSend);
+        await axios.post(`${API_URL}/mantenimientos/`, dataToSend);
       }
-      
+
       await loadData();
       handleCloseModal();
     } catch (error) {
@@ -132,7 +133,7 @@ const Mantenimientos = () => {
   const handleDelete = async (mantenimientoId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este mantenimiento?')) {
       try {
-        await axios.delete(`http://localhost:8000/mantenimientos/${mantenimientoId}`);
+        await axios.delete(`${API_URL}/mantenimientos/${mantenimientoId}`);
         await loadData();
       } catch (error) {
         console.error('Error eliminando mantenimiento:', error);
@@ -163,11 +164,11 @@ const Mantenimientos = () => {
   // Filtrar mantenimientos
   const filteredMantenimientos = mantenimientos.filter(mantenimiento => {
     const vehiculoInfo = getVehiculoInfo(mantenimiento.vehiculo_id).toLowerCase();
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       vehiculoInfo.includes(searchTerm.toLowerCase()) ||
       mantenimiento.servicio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       mantenimiento.taller?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesVehiculo = !filterVehiculo || mantenimiento.vehiculo_id === parseInt(filterVehiculo);
     const matchesFecha = !filterFecha || mantenimiento.fecha_servicio === filterFecha;
 
@@ -287,7 +288,7 @@ const Mantenimientos = () => {
                         {mantenimiento.observaciones && (
                           <div>
                             <small className="text-muted">
-                              {mantenimiento.observaciones.length > 50 
+                              {mantenimiento.observaciones.length > 50
                                 ? `${mantenimiento.observaciones.substring(0, 50)}...`
                                 : mantenimiento.observaciones
                               }
@@ -346,7 +347,7 @@ const Mantenimientos = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">

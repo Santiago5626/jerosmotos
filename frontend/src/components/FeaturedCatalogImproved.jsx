@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../config';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './FeaturedCatalog.css';
 
@@ -36,8 +37,8 @@ const FeaturedCatalog = () => {
     try {
       setLoading(true);
       // Obtener vehículos disponibles
-      const vehiculosResponse = await axios.get('http://localhost:8000/vehiculos/');
-      const vehiculosDisponibles = vehiculosResponse.data.filter(vehiculo => 
+      const vehiculosResponse = await axios.get(`${API_URL}/vehiculos/`);
+      const vehiculosDisponibles = vehiculosResponse.data.filter(vehiculo =>
         vehiculo.estado === 'disponible' && vehiculo.destacado
       );
 
@@ -45,14 +46,14 @@ const FeaturedCatalog = () => {
       const vehiculosConImagenes = await Promise.all(
         vehiculosDisponibles.slice(0, 6).map(async (vehiculo) => {
           try {
-            const imagenesResponse = await axios.get(`http://localhost:8000/vehiculos/${vehiculo.id}/imagenes`);
+            const imagenesResponse = await axios.get(`${API_URL}/vehiculos/${vehiculo.id}/imagenes`);
             const imagenes = imagenesResponse.data;
             const imagenPrincipal = imagenes.find(img => img.es_principal) || imagenes[0];
-            
+
             return {
               ...vehiculo,
-              foto: imagenPrincipal ? `data:image/jpeg;base64,${imagenPrincipal.imagen_data}` : 
-                    'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80'
+              foto: imagenPrincipal ? `data:image/jpeg;base64,${imagenPrincipal.imagen_data}` :
+                'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=80'
             };
           } catch (error) {
             console.error(`Error cargando imágenes para vehículo ${vehiculo.id}:`, error);
@@ -125,7 +126,7 @@ const FeaturedCatalog = () => {
     if (autoScrollRef.current) {
       clearInterval(autoScrollRef.current);
     }
-    
+
     if (direction === 'next') {
       scrollToNext();
     } else {
@@ -245,24 +246,24 @@ const FeaturedCatalog = () => {
                 style={{ width: '300px' }}
               >
                 <Link to={`/vehiculo/${vehiculo.id}`} className="text-decoration-none">
-                  <div className="card moto-card h-100 shadow-sm border-0 position-relative overflow-hidden" 
-                       style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.transform = 'translateY(-5px)';
-                         e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.transform = 'translateY(0)';
-                         e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-                       }}>
-                    
+                  <div className="card moto-card h-100 shadow-sm border-0 position-relative overflow-hidden"
+                    style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-5px)';
+                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                    }}>
+
                     <div className="position-relative overflow-hidden">
-                      <img 
-                        src={vehiculo.foto} 
-                        className="card-img-top" 
+                      <img
+                        src={vehiculo.foto}
+                        className="card-img-top"
                         alt={`${vehiculo.marca} ${vehiculo.modelo}`}
-                        style={{ 
-                          height: '200px', 
+                        style={{
+                          height: '200px',
                           objectFit: 'cover',
                           transition: 'transform 0.3s ease'
                         }}
@@ -273,7 +274,7 @@ const FeaturedCatalog = () => {
                           e.target.style.transform = 'scale(1)';
                         }}
                       />
-                      
+
                       {/* Badges superiores */}
                       <div className="position-absolute top-0 start-0 m-2">
                         {isNuevo(vehiculo) && (
@@ -290,32 +291,31 @@ const FeaturedCatalog = () => {
 
                       {/* Badge de estado */}
                       <div className="position-absolute top-0 end-0 m-2">
-                        <span className={`badge px-2 py-1 ${
-                          vehiculo.estado === 'disponible' ? 'bg-success' :
-                          vehiculo.estado === 'vendido' ? 'bg-primary' :
-                          vehiculo.estado === 'empeño' ? 'bg-warning text-dark' :
-                          'bg-secondary'
-                        }`}>
+                        <span className={`badge px-2 py-1 ${vehiculo.estado === 'disponible' ? 'bg-success' :
+                            vehiculo.estado === 'vendido' ? 'bg-primary' :
+                              vehiculo.estado === 'empeño' ? 'bg-warning text-dark' :
+                                'bg-secondary'
+                          }`}>
                           {vehiculo.estado === 'disponible' ? 'Disponible' :
-                           vehiculo.estado === 'vendido' ? 'Vendido' :
-                           vehiculo.estado === 'empeño' ? 'En empeño' :
-                           vehiculo.estado}
+                            vehiculo.estado === 'vendido' ? 'Vendido' :
+                              vehiculo.estado === 'empeño' ? 'En empeño' :
+                                vehiculo.estado}
                         </span>
                       </div>
 
                       {/* Overlay gradient */}
-                      <div className="position-absolute bottom-0 start-0 w-100" 
-                           style={{
-                             background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                             height: '40px'
-                           }}>
+                      <div className="position-absolute bottom-0 start-0 w-100"
+                        style={{
+                          background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                          height: '40px'
+                        }}>
                       </div>
                     </div>
 
                     <div className="card-body d-flex flex-column p-3">
                       {/* Título del vehículo */}
-                      <h5 className="card-title fw-bold mb-2 text-dark" 
-                          style={{ fontSize: '1.1rem', lineHeight: '1.3' }}>
+                      <h5 className="card-title fw-bold mb-2 text-dark"
+                        style={{ fontSize: '1.1rem', lineHeight: '1.3' }}>
                         {vehiculo.marca} {vehiculo.modelo}
                       </h5>
 
@@ -350,21 +350,21 @@ const FeaturedCatalog = () => {
                       {/* Botón de acción mejorado */}
                       <div className="mt-auto">
                         <div className="btn btn-danger w-100 fw-bold py-2 d-flex align-items-center justify-content-center"
-                             style={{ 
-                               background: 'linear-gradient(45deg, #dc3545, #c82333)',
-                               border: 'none',
-                               borderRadius: '8px',
-                               transition: 'all 0.3s ease',
-                               fontSize: '0.9rem'
-                             }}
-                             onMouseEnter={(e) => {
-                               e.target.style.background = 'linear-gradient(45deg, #c82333, #a71e2a)';
-                               e.target.style.transform = 'translateY(-1px)';
-                             }}
-                             onMouseLeave={(e) => {
-                               e.target.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
-                               e.target.style.transform = 'translateY(0)';
-                             }}>
+                          style={{
+                            background: 'linear-gradient(45deg, #dc3545, #c82333)',
+                            border: 'none',
+                            borderRadius: '8px',
+                            transition: 'all 0.3s ease',
+                            fontSize: '0.9rem'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'linear-gradient(45deg, #c82333, #a71e2a)';
+                            e.target.style.transform = 'translateY(-1px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}>
                           <i className="fas fa-eye me-2"></i>
                           Ver detalles
                         </div>
