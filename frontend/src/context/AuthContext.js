@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const AuthContext = createContext();
 
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const getCurrentUser = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/usuarios/me');
+      const response = await axios.get(`${API_URL}/usuarios/me`);
       setUser(response.data);
     } catch (error) {
       console.error('Error al obtener usuario actual:', error);
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       formData.append('username', email);
       formData.append('password', password);
 
-      const response = await axios.post('http://localhost:8000/usuarios/token', formData, {
+      const response = await axios.post(`${API_URL}/usuarios/token`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -58,13 +59,13 @@ export const AuthProvider = ({ children }) => {
 
       // Obtener datos del usuario
       await getCurrentUser();
-      
+
       return { success: true };
     } catch (error) {
       console.error('Error en login:', error);
-      return { 
-        success: false, 
-        error: error.response?.data?.detail || 'Error al iniciar sesión' 
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al iniciar sesión'
       };
     }
   };
