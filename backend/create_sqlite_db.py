@@ -91,7 +91,7 @@ if __name__ == "__main__":
             stmt = insert(models.usuarios).values(
                 nombre='Administrador',
                 correo='admin@jerosmotos.com',
-                contrasena='$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VcSAg/9u2', # admin123
+                contrasena='$2b$12$J7oTMNYcceyEZ3ciBXVY5uFTiDqxZIcplOGA4WUVqldsMGKe2Tww.', # admin123 - hash verificado
                 rol=models.RolEnum.administrador
             )
             try:
