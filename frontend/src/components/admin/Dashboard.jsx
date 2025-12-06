@@ -3,6 +3,7 @@ import { Row, Col, Card, Table, Badge, Spinner, Alert } from 'react-bootstrap';
 import { FaCar, FaMoneyBillWave, FaGem, FaChartLine } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import API_URL from '../../config';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -26,19 +27,19 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       // Cargar estadísticas básicas
       const [vehiculosRes, articulosRes, transaccionesRes, estadisticasRes] = await Promise.all([
-        axios.get('http://localhost:8000/vehiculos/', {
+        axios.get(`${API_URL}/vehiculos/`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        axios.get('http://localhost:8000/articulos_valor/', {
+        axios.get(`${API_URL}/articulos_valor/`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        axios.get('http://localhost:8000/transacciones/', {
+        axios.get(`${API_URL}/transacciones/`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        axios.get('http://localhost:8000/transacciones/estadisticas', {
+        axios.get(`${API_URL}/transacciones/estadisticas`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
@@ -76,9 +77,9 @@ const Dashboard = () => {
         .slice(0, 10)
         .map(t => ({
           id: t.id,
-          tipo: t.tipo === 'venta_vehiculo' ? 'Venta Vehículo' : 
-                t.tipo === 'venta_articulo' ? 'Venta Artículo' :
-                t.tipo === 'empeño_articulo' ? 'Empeño' : 'Recuperación',
+          tipo: t.tipo === 'venta_vehiculo' ? 'Venta Vehículo' :
+            t.tipo === 'venta_articulo' ? 'Venta Artículo' :
+              t.tipo === 'empeño_articulo' ? 'Empeño' : 'Recuperación',
           descripcion: t.vehiculo_info || t.articulo_info || 'N/A',
           estado: 'completado',
           valor: t.precio_venta,
