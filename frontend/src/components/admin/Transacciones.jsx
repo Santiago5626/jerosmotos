@@ -391,7 +391,10 @@ const Transacciones = () => {
       <Row className="mb-4">
         <Col>
           <div className="d-flex justify-content-between align-items-center">
-            <h2>💰 Transacciones</h2>
+            <h2>
+              <FaMoneyBillWave className="me-2" />
+              Transacciones
+            </h2>
             <Button variant="primary" onClick={() => setShowModal(true)}>
               <FaPlus className="me-2" />
               Nueva Transacción
