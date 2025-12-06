@@ -5,7 +5,7 @@ databases[mysql]
 pydantic
 mysql-connector-python
 python-multipart
-passlib[bcrypt]
+bcrypt
 python-jose[cryptography]
 aiosqlite
 email-validator
