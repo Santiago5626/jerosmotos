@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // Verificar rol específico si es requerido

@@ -33,10 +33,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/vehiculo/:id" element={<VehicleDetail />} />
-          
+
           {/* Ruta de login administrativo */}
-          <Route path="/admin/login" element={<Login />} />
-          
+          <Route path="/login" element={<Login />} />
+
           {/* Rutas protegidas del panel administrativo */}
           <Route path="/admin/*" element={
             <ProtectedRoute>

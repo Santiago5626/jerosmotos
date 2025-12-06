@@ -51,10 +51,10 @@ const Footer = () => {
           <p>Desarrollado por Santiago Lobo</p>
           <div className="mt-3">
             <a
-              href="/admin/login"
+              href="/login"
               className="text-muted"
-              style={{ 
-                fontSize: '0.85rem', 
+              style={{
+                fontSize: '0.85rem',
                 textDecoration: 'none',
                 opacity: 0.7,
                 transition: 'opacity 0.3s ease'
