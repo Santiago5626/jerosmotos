@@ -3,11 +3,11 @@ services:
   - type: web
     name: jerosmotos-api
     runtime: python
-    buildCommand: "cd backend && pip install -r requirements.txt"
+    buildCommand: "cd backend && pip install -r requirements.txt && python create_sqlite_db.py"
     startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11
+        value: 3.11.0
       - key: DATABASE_URL
         value: sqlite:///./jerosmotos.db
     

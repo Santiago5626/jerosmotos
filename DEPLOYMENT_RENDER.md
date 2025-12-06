@@ -38,7 +38,7 @@ Usa la siguiente configuración:
 En la sección **Environment**, agregar:
 
 ```
-PYTHON_VERSION=3.11
+PYTHON_VERSION=3.11.0
 DATABASE_URL=sqlite:///./jerosmotos.db
 ```
 
