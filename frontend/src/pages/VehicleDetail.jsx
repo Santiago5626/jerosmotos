@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaGasPump, FaPalette, FaCalendarAlt, FaShieldAlt, FaWhatsapp, FaShare, FaVideo, FaPlay, FaTimes, FaChevronLeft, FaChevronRight, FaExpand } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../config';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,26 +24,26 @@ const VehicleDetail = () => {
   const loadVehicleData = async () => {
     try {
       setLoading(true);
-      
+
       // Cargar datos del vehículo
-      const vehicleResponse = await axios.get(`http://localhost:8000/vehiculos/${id}`);
+      const vehicleResponse = await axios.get(`${API_URL}/vehiculos/${id}`);
       const vehicleData = vehicleResponse.data;
       setVehicle(vehicleData);
 
       // Cargar imágenes del vehículo (temporalmente usando el endpoint existente)
       try {
-        const imagenesResponse = await axios.get(`http://localhost:8000/vehiculos/${id}/imagenes`);
+        const imagenesResponse = await axios.get(`${API_URL}/vehiculos/${id}/imagenes`);
         const imagenesData = imagenesResponse.data;
-        
+
         if (imagenesData.length > 0) {
           const mediaFormateada = imagenesData.map(img => ({
             ...img,
             url: `data:image/jpeg;base64,${img.imagen_data}`,
             tipo: 'imagen'
           }));
-          
+
           setMedia(mediaFormateada);
-          
+
           // Establecer media principal (primera imagen principal o primera imagen)
           const mediaPrincipal = mediaFormateada.find(item => item.es_principal) || mediaFormateada[0];
           setMainMedia(mediaPrincipal);
@@ -108,7 +109,7 @@ const VehicleDetail = () => {
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (!showModal) return;
-      
+
       if (e.key === 'Escape') {
         closeModal();
       } else if (e.key === 'ArrowRight') {
@@ -130,7 +131,7 @@ const VehicleDetail = () => {
 
   const handleShareClick = async () => {
     const currentUrl = window.location.href;
-    
+
     try {
       // Intentar usar la API nativa de compartir si está disponible
       if (navigator.share) {
@@ -142,14 +143,14 @@ const VehicleDetail = () => {
       } else {
         // Fallback: copiar al portapapeles
         await navigator.clipboard.writeText(currentUrl);
-        
+
         // Mostrar mensaje de confirmación
         const button = document.querySelector('[aria-label="Compartir vehículo"]');
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
         button.classList.remove('btn-outline-primary');
         button.classList.add('btn-success');
-        
+
         setTimeout(() => {
           button.innerHTML = originalText;
           button.classList.remove('btn-success');
@@ -165,7 +166,7 @@ const VehicleDetail = () => {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      
+
       alert('Link copiado al portapapeles');
     }
   };
@@ -187,9 +188,9 @@ const VehicleDetail = () => {
   if (loading) {
     return (
       <>
-      <Navbar isHome={false} />
-      <div style={{ marginTop: '100px' }}></div>
-      <div className="container my-4">
+        <Navbar isHome={false} />
+        <div style={{ marginTop: '100px' }}></div>
+        <div className="container my-4">
           <div className="text-center py-5">
             <div className="spinner-border text-danger" role="status">
               <span className="visually-hidden">Cargando...</span>
@@ -205,9 +206,9 @@ const VehicleDetail = () => {
   if (error || !vehicle) {
     return (
       <>
-      <Navbar isHome={false} />
-      <div style={{ marginTop: '20px' }}></div>
-      <div className="container my-3">
+        <Navbar isHome={false} />
+        <div style={{ marginTop: '20px' }}></div>
+        <div className="container my-3">
           <div className="alert alert-danger text-center" role="alert">
             {error || 'Vehículo no encontrado'}
           </div>
@@ -234,8 +235,8 @@ const VehicleDetail = () => {
               {/* Imagen principal */}
               <div
                 className="position-relative rounded-3 shadow-lg overflow-hidden"
-                style={{ 
-                  height: '500px', 
+                style={{
+                  height: '500px',
                   cursor: 'zoom-in',
                   background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
                 }}
@@ -246,7 +247,7 @@ const VehicleDetail = () => {
                     src={mainMedia.url}
                     alt={`${vehicle.marca} ${vehicle.modelo}`}
                     className="w-100 h-100"
-                    style={{ 
+                    style={{
                       objectFit: 'cover',
                       transition: 'transform 0.3s ease'
                     }}
@@ -270,7 +271,7 @@ const VehicleDetail = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Botón de expandir */}
                 <button
                   className="btn btn-dark btn-sm position-absolute"
@@ -487,19 +488,19 @@ const VehicleDetail = () => {
                   <small className="text-muted">Precio de venta</small>
                 </div>
               </div>
-              
+
               <div className="d-grid gap-2 mt-auto">
-                <button 
-                  className="btn btn-success btn-lg" 
-                  onClick={handleContactClick} 
+                <button
+                  className="btn btn-success btn-lg"
+                  onClick={handleContactClick}
                   aria-label="Preguntar por este vehículo"
                 >
                   <FaWhatsapp className="me-2" />
                   Preguntar por este vehículo
                 </button>
-                <button 
-                  className="btn btn-outline-primary" 
-                  onClick={handleShareClick} 
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={handleShareClick}
                   aria-label="Compartir vehículo"
                 >
                   <FaShare className="me-2" />
@@ -547,8 +548,8 @@ const VehicleDetail = () => {
                   src={media[currentImageIndex].url}
                   alt={`${vehicle.marca} ${vehicle.modelo} - Imagen ${currentImageIndex + 1}`}
                   className="img-fluid rounded-3 shadow-lg"
-                  style={{ 
-                    maxWidth: '100%', 
+                  style={{
+                    maxWidth: '100%',
                     maxHeight: '90vh',
                     objectFit: 'contain'
                   }}
@@ -559,8 +560,8 @@ const VehicleDetail = () => {
                   src={media[currentImageIndex].url}
                   controls
                   className="rounded-3 shadow-lg"
-                  style={{ 
-                    maxWidth: '100%', 
+                  style={{
+                    maxWidth: '100%',
                     maxHeight: '90vh'
                   }}
                   onClick={(e) => e.stopPropagation()}

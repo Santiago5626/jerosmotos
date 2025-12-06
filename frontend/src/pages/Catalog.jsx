@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGasPump, FaPalette, FaSearch, FaFilter } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../config';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer';
 import './Catalog.css';
@@ -29,22 +30,22 @@ const Catalog = () => {
     try {
       setLoading(true);
       // Obtener vehículos visibles en el catálogo público
-      const response = await axios.get('http://localhost:8000/vehiculos/catalogo/publico');
+      const response = await axios.get(`${API_URL}/vehiculos/catalogo/publico`);
       const vehiculosData = response.data;
-      
+
       // Ya están filtrados por el endpoint, solo los disponibles y visibles
       const vehiculosDisponibles = vehiculosData;
-      
+
       // Cargar imágenes para cada vehículo
       const vehiculosConImagenes = await Promise.all(
         vehiculosDisponibles.map(async (vehiculo) => {
           try {
-            const imagenesResponse = await axios.get(`http://localhost:8000/vehiculos/${vehiculo.id}/imagenes`);
+            const imagenesResponse = await axios.get(`${API_URL}/vehiculos/${vehiculo.id}/imagenes`);
             const imagenes = imagenesResponse.data;
-            
+
             // Buscar imagen principal o tomar la primera
             const imagenPrincipal = imagenes.find(img => img.es_principal) || imagenes[0];
-            
+
             return {
               ...vehiculo,
               imagen: imagenPrincipal ? `data:image/jpeg;base64,${imagenPrincipal.imagen_data}` : null,
@@ -60,13 +61,13 @@ const Catalog = () => {
           }
         })
       );
-      
+
       setVehiculos(vehiculosConImagenes);
-      
+
       // Extraer marcas únicas para el filtro
       const marcasUnicas = [...new Set(vehiculosConImagenes.map(v => v.marca))].sort();
       setMarcas(marcasUnicas);
-      
+
     } catch (error) {
       console.error('Error cargando vehículos:', error);
       setError('Error al cargar el catálogo de vehículos');
@@ -147,7 +148,7 @@ const Catalog = () => {
     <>
       <Navbar />
       <div style={{ marginTop: '80px' }}></div>
-      
+
       <div className="catalog-page">
         <div className="container py-5">
           {/* Header */}
@@ -184,7 +185,7 @@ const Catalog = () => {
                 </select>
               </div>
               <div className="col-md-3">
-                <button 
+                <button
                   className="btn btn-outline-secondary w-100"
                   onClick={clearFilters}
                 >
@@ -216,8 +217,8 @@ const Catalog = () => {
             <div className="row g-4">
               {filteredVehiculos.map((vehiculo, index) => (
                 <div key={vehiculo.id} className="col-lg-4 col-md-6">
-                  <Link 
-                    to={`/vehiculo/${vehiculo.id}`} 
+                  <Link
+                    to={`/vehiculo/${vehiculo.id}`}
                     className="text-decoration-none"
                   >
                     <div className={`catalog-card ${index < 6 ? 'animate-in' : ''}`}>
@@ -235,7 +236,7 @@ const Catalog = () => {
                       </div>
                       <div className="card-body">
                         <h5 className="card-title">{vehiculo.marca} {vehiculo.modelo}</h5>
-                        
+
                         <div className="vehicle-details">
                           {vehiculo.cilindraje && (
                             <div className="detail-item">
@@ -269,7 +270,7 @@ const Catalog = () => {
           )}
         </div>
       </div>
-      
+
       <Footer />
     </>
   );
