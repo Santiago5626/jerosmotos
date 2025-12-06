@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel, EmailStr
 from typing import List
-import hashlib
+from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from database import database
@@ -13,6 +13,9 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="usuarios/token")
+
+# Configurar contexto de bcrypt para hashing de contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter()
 
@@ -33,12 +36,12 @@ class Token(BaseModel):
     token_type: str
 
 def verify_password(plain_password, hashed_password):
-    """Verificar contraseña usando SHA256"""
-    return hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password
+    """Verificar contraseña usando bcrypt"""
+    return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
-    """Hash de contraseña usando SHA256"""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash de contraseña usando bcrypt"""
+    return pwd_context.hash(password)
 
 async def get_user_by_email(email: str):
     query = usuarios.select().where(usuarios.c.correo == email)
