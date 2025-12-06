@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Modal, 
-  Form, 
-  Alert, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Alert,
   Spinner,
   Badge,
   InputGroup,
@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaUsers, FaSearch, FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../../config';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -25,7 +26,7 @@ const Usuarios = () => {
   const [editingUsuario, setEditingUsuario] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRol, setFilterRol] = useState('');
@@ -51,8 +52,8 @@ const Usuarios = () => {
     try {
       setLoading(true);
       const [usuariosRes, sedesRes] = await Promise.all([
-        axios.get('http://localhost:8000/usuarios/'),
-        axios.get('http://localhost:8000/sedes/')
+        axios.get(`${API_URL}/usuarios/`),
+        axios.get(`${API_URL}/sedes/`)
       ]);
       setUsuarios(usuariosRes.data);
       setSedes(sedesRes.data);
@@ -120,11 +121,11 @@ const Usuarios = () => {
       }
 
       if (editingUsuario) {
-        await axios.put(`http://localhost:8000/usuarios/${editingUsuario.id}`, dataToSend);
+        await axios.put(`${API_URL}/usuarios/${editingUsuario.id}`, dataToSend);
       } else {
-        await axios.post('http://localhost:8000/usuarios/register', dataToSend);
+        await axios.post(`${API_URL}/usuarios/register`, dataToSend);
       }
-      
+
       await loadData();
       handleCloseModal();
     } catch (error) {
@@ -138,7 +139,7 @@ const Usuarios = () => {
   const handleDelete = async (usuarioId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        await axios.delete(`http://localhost:8000/usuarios/${usuarioId}`);
+        await axios.delete(`${API_URL}/usuarios/${usuarioId}`);
         await loadData();
       } catch (error) {
         console.error('Error eliminando usuario:', error);
@@ -168,10 +169,10 @@ const Usuarios = () => {
 
   // Filtrar usuarios
   const filteredUsuarios = usuarios.filter(usuario => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       usuario.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       usuario.correo?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesRol = !filterRol || usuario.rol === filterRol;
 
     return matchesSearch && matchesRol;
@@ -352,7 +353,7 @@ const Usuarios = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Nombre Completo *</Form.Label>
               <Form.Control

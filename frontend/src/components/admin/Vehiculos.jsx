@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Modal, 
-  Form, 
-  Alert, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Alert,
   Spinner,
   Badge,
   InputGroup,
@@ -17,6 +17,7 @@ import {
 import { FaPlus, FaEdit, FaTrash, FaCar, FaSearch, FaFilter, FaImage, FaTimes, FaStar, FaVideo, FaPlay, FaEye, FaEyeSlash, FaHandHoldingUsd, FaMoneyBillWave } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import API_URL from '../../config';
 
 const Vehiculos = () => {
   const { isAdmin } = useAuth();
@@ -31,7 +32,7 @@ const Vehiculos = () => {
   const [vehiculoEmpeno, setVehiculoEmpeno] = useState(null);
   const [vehiculoAbono, setVehiculoAbono] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [filterEstado, setFilterEstado] = useState('');
@@ -90,8 +91,8 @@ const Vehiculos = () => {
     try {
       setLoading(true);
       const [vehiculosRes, sedesRes] = await Promise.all([
-        axios.get('http://localhost:8000/vehiculos/'),
-        axios.get('http://localhost:8000/sedes/')
+        axios.get(`${API_URL}/vehiculos/`),
+        axios.get(`${API_URL}/sedes/`)
       ]);
       setVehiculos(vehiculosRes.data);
       setSedes(sedesRes.data);
@@ -123,12 +124,12 @@ const Vehiculos = () => {
         cliente_documento: vehiculo.cliente_documento || '',
         observaciones_empeno: vehiculo.observaciones_empeno || ''
       });
-      
+
       // Cargar imágenes existentes del vehículo
       try {
-        const imagenesResponse = await axios.get(`http://localhost:8000/vehiculos/${vehiculo.id}/imagenes`);
+        const imagenesResponse = await axios.get(`${API_URL}/vehiculos/${vehiculo.id}/imagenes`);
         const imagenesExistentes = imagenesResponse.data;
-        
+
         if (imagenesExistentes.length > 0) {
           // Convertir las imágenes de base64 a previsualizaciones
           const previews = imagenesExistentes.map(img => `data:image/jpeg;base64,${img.imagen_data}`);
@@ -202,7 +203,7 @@ const Vehiculos = () => {
       // Agregar las nuevas imágenes a las existentes
       const newImages = [...selectedImages, ...files];
       setSelectedImages(newImages);
-      
+
       // Crear previsualizaciones para las nuevas imágenes
       const newPreviews = files.map(file => {
         return new Promise((resolve) => {
@@ -211,13 +212,13 @@ const Vehiculos = () => {
           reader.readAsDataURL(file);
         });
       });
-      
+
       // Agregar las nuevas previsualizaciones a las existentes
       Promise.all(newPreviews).then(newPreviewsArray => {
         setImagePreviews(prev => [...prev, ...newPreviewsArray]);
       });
     }
-    
+
     // Limpiar el input para permitir seleccionar los mismos archivos nuevamente si es necesario
     e.target.value = '';
   };
@@ -228,7 +229,7 @@ const Vehiculos = () => {
       // Agregar los nuevos videos a los existentes
       const newVideos = [...selectedVideos, ...files];
       setSelectedVideos(newVideos);
-      
+
       // Crear previsualizaciones para los nuevos videos
       const newPreviews = files.map(file => {
         return new Promise((resolve) => {
@@ -252,13 +253,13 @@ const Vehiculos = () => {
           video.src = URL.createObjectURL(file);
         });
       });
-      
+
       // Agregar las nuevas previsualizaciones a las existentes
       Promise.all(newPreviews).then(newPreviewsArray => {
         setVideoPreviews(prev => [...prev, ...newPreviewsArray]);
       });
     }
-    
+
     // Limpiar el input para permitir seleccionar los mismos archivos nuevamente si es necesario
     e.target.value = '';
   };
@@ -293,9 +294,9 @@ const Vehiculos = () => {
 
       let vehiculoResponse;
       if (editingVehiculo) {
-        vehiculoResponse = await axios.put(`http://localhost:8000/vehiculos/${editingVehiculo.id}`, dataToSend);
+        vehiculoResponse = await axios.put(`${API_URL}/vehiculos/${editingVehiculo.id}`, dataToSend);
       } else {
-        vehiculoResponse = await axios.post('http://localhost:8000/vehiculos/', dataToSend);
+        vehiculoResponse = await axios.post(`${API_URL}/vehiculos/`, dataToSend);
       }
 
       const vehiculoId = editingVehiculo ? editingVehiculo.id : vehiculoResponse.data.id;
@@ -309,30 +310,30 @@ const Vehiculos = () => {
             'Sí = Reemplazar todas las imágenes\n' +
             'No = Agregar a las imágenes existentes'
           );
-          
+
           if (shouldReplace) {
             // Eliminar todas las imágenes existentes
             try {
-              const existingImages = await axios.get(`http://localhost:8000/vehiculos/${vehiculoId}/imagenes`);
+              const existingImages = await axios.get(`${API_URL}/vehiculos/${vehiculoId}/imagenes`);
               for (const img of existingImages.data) {
-                await axios.delete(`http://localhost:8000/vehiculos/${vehiculoId}/imagenes/${img.id}`);
+                await axios.delete(`${API_URL}/vehiculos/${vehiculoId}/imagenes/${img.id}`);
               }
             } catch (error) {
               console.warn('Error eliminando imágenes existentes:', error);
             }
           }
         }
-        
+
         // Subir las nuevas imágenes
         for (let i = 0; i < selectedImages.length; i++) {
           const imageFormData = new FormData();
           imageFormData.append('imagen', selectedImages[i]);
-          
+
           // Solo marcar como principal si es la primera imagen Y (es un vehículo nuevo O se están reemplazando las imágenes)
           const esPrincipal = i === 0 && (!editingVehiculo || window.confirm('¿Deseas que la primera imagen nueva sea la imagen principal?'));
           imageFormData.append('es_principal', esPrincipal ? 'true' : 'false');
-          
-          await axios.post(`http://localhost:8000/vehiculos/${vehiculoId}/imagenes`, imageFormData, {
+
+          await axios.post(`${API_URL}/vehiculos/${vehiculoId}/imagenes`, imageFormData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -348,9 +349,9 @@ const Vehiculos = () => {
           videoFormData.append('video', selectedVideos[i]);
           videoFormData.append('titulo', `Video ${i + 1} - ${selectedVideos[i].name}`);
           videoFormData.append('orden', i.toString());
-          
+
           try {
-            await axios.post(`http://localhost:8000/vehiculos/${vehiculoId}/videos`, videoFormData, {
+            await axios.post(`${API_URL}/vehiculos/${vehiculoId}/videos`, videoFormData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -361,7 +362,7 @@ const Vehiculos = () => {
           }
         }
       }
-      
+
       await loadData();
       handleCloseModal();
     } catch (error) {
@@ -375,7 +376,7 @@ const Vehiculos = () => {
   const handleDelete = async (vehiculoId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este vehículo?')) {
       try {
-        await axios.delete(`http://localhost:8000/vehiculos/${vehiculoId}`);
+        await axios.delete(`${API_URL}/vehiculos/${vehiculoId}`);
         await loadData();
       } catch (error) {
         console.error('Error eliminando vehículo:', error);
@@ -386,7 +387,7 @@ const Vehiculos = () => {
 
   const handleToggleDestacado = async (vehiculoId) => {
     try {
-      await axios.patch(`http://localhost:8000/vehiculos/${vehiculoId}/destacar`);
+      await axios.patch(`${API_URL}/vehiculos/${vehiculoId}/destacar`);
       await loadData();
     } catch (error) {
       console.error('Error cambiando estado destacado:', error);
@@ -396,7 +397,7 @@ const Vehiculos = () => {
 
   const handleToggleVisibilidad = async (vehiculoId) => {
     try {
-      await axios.patch(`http://localhost:8000/vehiculos/${vehiculoId}/visibilidad`);
+      await axios.patch(`${API_URL}/vehiculos/${vehiculoId}/visibilidad`);
       await loadData();
     } catch (error) {
       console.error('Error cambiando visibilidad en catálogo:', error);
@@ -446,7 +447,7 @@ const Vehiculos = () => {
         sede_id: vehiculoEmpeno.sede_id
       };
 
-      await axios.post(`http://localhost:8000/vehiculos/${vehiculoEmpeno.id}/empenar`, dataToSend);
+      await axios.post(`${API_URL}/vehiculos/${vehiculoEmpeno.id}/empenar`, dataToSend);
       await loadData();
       handleCloseEmpenoModal();
     } catch (error) {
@@ -463,16 +464,16 @@ const Vehiculos = () => {
     setAbonoFormData({
       monto_abono: ''
     });
-    
+
     // Cargar datos del empeño
     try {
-      const response = await axios.get(`http://localhost:8000/vehiculos/${vehiculo.id}/empeno`);
-      setVehiculoAbono({...vehiculo, ...response.data});
+      const response = await axios.get(`${API_URL}/vehiculos/${vehiculo.id}/empeno`);
+      setVehiculoAbono({ ...vehiculo, ...response.data });
     } catch (error) {
       console.error('Error cargando datos del empeño:', error);
       setError('Error al cargar los datos del empeño');
     }
-    
+
     setShowAbonoModal(true);
   };
 
@@ -497,12 +498,12 @@ const Vehiculos = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/vehiculos/${vehiculoAbono.id}/abono?monto_abono=${parseFloat(abonoFormData.monto_abono)}`
+        `${API_URL}/vehiculos/${vehiculoAbono.id}/abono?monto_abono=${parseFloat(abonoFormData.monto_abono)}`
       );
-      
+
       // Mostrar resultado del abono
       alert(response.data.mensaje);
-      
+
       await loadData();
       handleCloseAbonoModal();
     } catch (error) {
@@ -543,11 +544,11 @@ const Vehiculos = () => {
 
   // Filtrar vehículos
   const filteredVehiculos = vehiculos.filter(vehiculo => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       vehiculo.marca?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehiculo.modelo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehiculo.placa?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesEstado = !filterEstado || vehiculo.estado === filterEstado;
     const matchesSede = !filterSede || vehiculo.sede_id === parseInt(filterSede);
 
@@ -717,7 +718,7 @@ const Vehiculos = () => {
                         >
                           <FaEdit />
                         </Button>
-                        
+
                         {vehiculo.estado === 'empeño' && (
                           <Button
                             variant="outline-success"
@@ -728,7 +729,7 @@ const Vehiculos = () => {
                             <FaMoneyBillWave />
                           </Button>
                         )}
-                        
+
                         {isAdmin && (
                           <Button
                             variant="outline-danger"
@@ -766,7 +767,7 @@ const Vehiculos = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
@@ -907,7 +908,7 @@ const Vehiculos = () => {
                 <Alert variant="warning" className="mb-3">
                   <strong>Modo Empeño:</strong> Complete la información del cliente para registrar el empeño del vehículo.
                 </Alert>
-                
+
                 <Form.Group className="mb-3">
                   <Form.Label>Nombre del Cliente *</Form.Label>
                   <Form.Control
@@ -1059,8 +1060,8 @@ const Vehiculos = () => {
                           style={{ width: '100%', height: '120px', objectFit: 'cover' }}
                         />
                         {index === 0 && (
-                          <Badge 
-                            bg="primary" 
+                          <Badge
+                            bg="primary"
                             className="position-absolute top-0 start-0 m-1"
                           >
                             Principal
@@ -1104,18 +1105,18 @@ const Vehiculos = () => {
                             justifyContent: 'center'
                           }}
                         >
-                          <FaPlay 
-                            size={24} 
-                            style={{ 
-                              color: 'white', 
-                              backgroundColor: 'rgba(0,0,0,0.7)', 
-                              borderRadius: '50%', 
-                              padding: '8px' 
-                            }} 
+                          <FaPlay
+                            size={24}
+                            style={{
+                              color: 'white',
+                              backgroundColor: 'rgba(0,0,0,0.7)',
+                              borderRadius: '50%',
+                              padding: '8px'
+                            }}
                           />
                         </div>
-                        <Badge 
-                          bg="info" 
+                        <Badge
+                          bg="info"
                           className="position-absolute top-0 start-0 m-1"
                         >
                           <FaVideo className="me-1" />
@@ -1130,11 +1131,11 @@ const Vehiculos = () => {
                         >
                           <FaTimes />
                         </Button>
-                        <div 
+                        <div
                           className="position-absolute bottom-0 start-0 end-0 p-1"
-                          style={{ 
-                            backgroundColor: 'rgba(0,0,0,0.7)', 
-                            color: 'white', 
+                          style={{
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            color: 'white',
                             fontSize: '0.75rem',
                             borderBottomLeftRadius: '0.375rem',
                             borderBottomRightRadius: '0.375rem'
@@ -1187,7 +1188,7 @@ const Vehiculos = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             {vehiculoEmpeno && (
               <Alert variant="info">
                 <strong>Vehículo:</strong> {vehiculoEmpeno.marca} {vehiculoEmpeno.modelo} - {vehiculoEmpeno.placa}
@@ -1324,7 +1325,7 @@ const Vehiculos = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             {vehiculoAbono && (
               <>
                 <Alert variant="info">
@@ -1352,7 +1353,7 @@ const Vehiculos = () => {
                         <p><strong>Interés Acumulado:</strong> {formatCurrency(vehiculoAbono.interes_acumulado)}</p>
                       </Col>
                       <Col md={6}>
-                        <p><strong>Valor Total a Pagar:</strong> 
+                        <p><strong>Valor Total a Pagar:</strong>
                           <span className="text-danger fw-bold"> {formatCurrency(vehiculoAbono.valor_actual)}</span>
                         </p>
                       </Col>
