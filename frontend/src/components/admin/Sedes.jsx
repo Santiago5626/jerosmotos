@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Row, 
-  Col, 
-  Card, 
-  Table, 
-  Button, 
-  Modal, 
-  Form, 
-  Alert, 
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Modal,
+  Form,
+  Alert,
   Spinner,
   Badge
 } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaBuilding } from 'react-icons/fa';
 import axios from 'axios';
+import API_URL from '../../config';
 
 const Sedes = () => {
   const [sedes, setSedes] = useState([]);
@@ -34,7 +35,7 @@ const Sedes = () => {
   const loadSedes = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8000/sedes/');
+      const response = await axios.get(`${API_URL}/sedes/`);
       setSedes(response.data);
     } catch (error) {
       console.error('Error cargando sedes:', error);
@@ -90,12 +91,12 @@ const Sedes = () => {
     try {
       if (editingSede) {
         // Actualizar sede existente
-        await axios.put(`http://localhost:8000/sedes/${editingSede.id}`, formData);
+        await axios.put(`${API_URL}/sedes/${editingSede.id}`, formData);
       } else {
         // Crear nueva sede
-        await axios.post('http://localhost:8000/sedes/', formData);
+        await axios.post(`${API_URL}/sedes/`, formData);
       }
-      
+
       await loadSedes();
       handleCloseModal();
     } catch (error) {
@@ -109,7 +110,7 @@ const Sedes = () => {
   const handleDelete = async (sedeId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta sede?')) {
       try {
-        await axios.delete(`http://localhost:8000/sedes/${sedeId}`);
+        await axios.delete(`${API_URL}/sedes/${sedeId}`);
         await loadSedes();
       } catch (error) {
         console.error('Error eliminando sede:', error);
@@ -215,7 +216,7 @@ const Sedes = () => {
             {error && (
               <Alert variant="danger">{error}</Alert>
             )}
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Nombre de la Sede *</Form.Label>
               <Form.Control
