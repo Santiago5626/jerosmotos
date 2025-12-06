@@ -1,0 +1,29 @@
+.about-section {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  padding: 2rem 1rem;
+}
+
+.about-section h2 {
+  font-weight: 700;
+  color: #d90429; /* rojo acento */
+  margin-bottom: 1.5rem;
+}
+
+.about-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+}
+
+.about-section h5 {
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.about-section svg {
+  color: #d90429;
+}

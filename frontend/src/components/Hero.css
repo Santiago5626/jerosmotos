@@ -1,0 +1,106 @@
+.hero-section {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f8f9fa;
+  text-align: center;
+  background-size: cover;
+  background-position: center 30%;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    background-position: right 35% center;
+  }
+}
+
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.hero-section .container {
+  z-index: 2;
+  position: relative;
+  max-width: 700px;
+}
+
+.hero-logo {
+  max-width: 250px;
+  margin-bottom: 1rem;
+}
+
+.hero-slogan {
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #f8f9fa; /* blanco para mejor contraste */
+  animation: fadeInDown 1.2s ease forwards;
+  margin-bottom: 0.5rem;
+}
+
+.hero-buttons .hero-btn {
+  margin-top: 1rem;
+  animation: fadeInUp 1.5s ease forwards;
+  transition: transform 0.3s ease;
+  border-radius: 30px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero-buttons .hero-btn:hover {
+  transform: scale(1.05);
+}
+
+.btn-catalogo {
+  background-color: #25d366; /* verde WhatsApp */
+  border: none;
+  color: white;
+}
+
+.btn-catalogo:hover {
+  background-color: #1ebe57;
+}
+
+.btn-whatsapp {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.btn-whatsapp:hover {
+  background-color: white;
+  color: #25d366;
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

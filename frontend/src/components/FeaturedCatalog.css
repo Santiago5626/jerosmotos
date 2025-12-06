@@ -1,0 +1,811 @@
+  /* Estilos mejorados para el catálogo destacado */
+.featured-catalog {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+}
+
+.featured-catalog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2c3e50 0%, #34495e 50%, #25d366 100%);
+}
+
+.featured-catalog h2 {
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-align: center;
+  font-size: 2.8rem;
+  text-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+  position: relative;
+}
+
+.featured-catalog h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #2c3e50 0%, #25d366 100%);
+  border-radius: 2px;
+}
+
+.moto-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.moto-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.moto-card .card-img-top {
+  transition: transform 0.4s ease;
+  border-radius: 0;
+  height: 280px;
+  object-fit: cover;
+}
+
+.moto-card:hover .card-img-top {
+  transform: scale(1.08);
+}
+
+.moto-card .card-body {
+  padding: 2rem;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.moto-card .card-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.moto-card .btn {
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #2c3e50, #34495e);
+  border: none;
+  color: white;
+}
+
+.moto-card .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.moto-card .btn:hover::before {
+  left: 100%;
+}
+
+.moto-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+  background: linear-gradient(45deg, #34495e, #25d366);
+}
+
+/* Badges mejorados */
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.badge.bg-danger {
+  background: linear-gradient(45deg, #6c757d, #5a6268) !important;
+  color: white !important;
+}
+
+.badge.bg-warning {
+  background: linear-gradient(45deg, #ffc107, #e0a800) !important;
+}
+
+.badge.bg-success {
+  background: linear-gradient(45deg, #25d366, #20c997) !important;
+}
+
+.badge.bg-primary {
+  background: linear-gradient(45deg, #2c3e50, #34495e) !important;
+}
+
+/* Efectos de precio */
+.text-danger {
+  background: linear-gradient(45deg, #25d366, #20c997);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Iconos con animación */
+.fas {
+  transition: transform 0.3s ease;
+}
+
+.moto-card:hover .fas {
+  transform: scale(1.1);
+}
+
+/* Overlay gradient para imágenes */
+.position-relative .position-absolute.bottom-0 {
+  background: linear-gradient(transparent, rgba(0,0,0,0.7)) !important;
+}
+
+/* Responsive mejorado */
+@media (max-width: 992px) {
+  .featured-catalog h2 {
+    font-size: 2.2rem;
+  }
+  
+  .moto-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .moto-card .card-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-catalog {
+    padding: 2rem 0;
+  }
+  
+  .featured-catalog h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .moto-card .card-body {
+    padding: 1.25rem;
+  }
+  
+  .moto-card .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .moto-card .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .moto-card .card-img-top {
+    height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .featured-catalog {
+    padding: 1.5rem 0;
+  }
+  
+  .featured-catalog h2 {
+    font-size: 1.8rem;
+  }
+  
+  .moto-card .card-body {
+    padding: 1rem;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .moto-card .card-img-top {
+    height: 220px;
+  }
+}
+
+/* Animaciones de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.moto-card {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.moto-card:nth-child(1) { animation-delay: 0.1s; }
+.moto-card:nth-child(2) { animation-delay: 0.2s; }
+.moto-card:nth-child(3) { animation-delay: 0.3s; }
+.moto-card:nth-child(4) { animation-delay: 0.4s; }
+.moto-card:nth-child(5) { animation-delay: 0.5s; }
+.moto-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Mejoras para el estado vacío */
+.card.border-0.bg-light {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card.border-0.bg-light .fas.fa-motorcycle {
+  color: #2c3e50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Efectos adicionales para enlaces */
+a.text-decoration-none:hover .moto-card {
+  text-decoration: none;
+}
+
+/* Mejoras para los detalles del vehículo */
+.d-flex.align-items-center {
+  transition: all 0.3s ease;
+}
+
+.moto-card:hover .d-flex.align-items-center {
+  transform: translateX(5px);
+}
+
+/* Estilos para el precio tachado */
+.text-decoration-line-through {
+  position: relative;
+}
+
+.text-decoration-line-through::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6c757d;
+  transform: translateY(-50%);
+}
+
+/* Estilos adicionales para el carrusel */
+.carousel-container {
+  position: relative;
+}
+
+.carousel-scroll {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.carousel-scroll::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.carousel-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #2c3e50;
+  background: white;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav-btn:hover {
+  background: #2c3e50;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+}
+
+.carousel-nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* Animación suave para las tarjetas del carrusel */
+.carousel-card {
+  flex-shrink: 0;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+
+.carousel-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Responsive para el carrusel */
+@media (max-width: 768px) {
+  .carousel-card {
+    width: 280px;
+  }
+  
+  .carousel-nav-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-card {
+    width: 260px;
+  }
+  
+  .featured-catalog .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .featured-catalog h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Ocultar scrollbar en el carrusel */
+.d-flex.gap-3.overflow-auto {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.d-flex.gap-3.overflow-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* Estilos mejorados para los botones de navegación del carrusel */
+.carousel-nav-btn-left,
+.carousel-nav-btn-right {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 1px solid rgba(44, 62, 80, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0.7;
+  backdrop-filter: blur(10px);
+}
+
+.carousel-nav-btn-left:hover,
+.carousel-nav-btn-right:hover {
+  opacity: 1;
+  background: rgba(44, 62, 80, 0.9);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+}
+
+.carousel-nav-btn-left:active,
+.carousel-nav-btn-right:active {
+  transform: scale(0.95);
+}
+
+/* Animación suave para el auto-scroll */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.carousel-card-enter {
+  animation: slideIn 0.5s ease-out;
+}
+
+/* Indicadores de posición del carrusel */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.carousel-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(44, 62, 80, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicator.active {
+  background: #2c3e50;
+  transform: scale(1.2);
+}
+
+/* Responsive para botones de navegación */
+@media (max-width: 768px) {
+  .carousel-nav-btn-left,
+  .carousel-nav-btn-right {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .carousel-nav-btn-left {
+    left: -15px;
+  }
+  
+  .carousel-nav-btn-right {
+    right: -15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-nav-btn-left,
+  .carousel-nav-btn-right {
+    width: 28px;
+    height: 28px;
+    opacity: 0.8;
+  }
+  
+  .carousel-nav-btn-left {
+    left: -10px;
+  }
+  
+  .carousel-nav-btn-right {
+    right: -10px;
+  }
+}
+
+/* Efecto de pausa en hover sobre el carrusel */
+.featured-catalog:hover .carousel-nav-btn-left,
+.featured-catalog:hover .carousel-nav-btn-right {
+  opacity: 1;
+}
+
+/* Mejoras para la accesibilidad */
+.carousel-nav-btn-left:focus,
+.carousel-nav-btn-right:focus {
+  outline: 2px solid #25d366;
+  outline-offset: 2px;
+}
+
+/* Animación de entrada para las tarjetas */
+.moto-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.moto-card:nth-child(1) { animation-delay: 0.1s; }
+.moto-card:nth-child(2) { animation-delay: 0.2s; }
+.moto-card:nth-child(3) { animation-delay: 0.3s; }
+.moto-card:nth-child(4) { animation-delay: 0.4s; }
+.moto-card:nth-child(5) { animation-delay: 0.5s; }
+.moto-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Estilos para los botones de navegación mejorados */
+.carousel-nav-btn-improved {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.carousel-nav-btn-improved:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-nav-btn-improved:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-nav-btn-improved:focus {
+  outline: 2px solid #25d366;
+  outline-offset: 2px;
+}
+
+.carousel-nav-btn-left {
+  left: -30px;
+}
+
+.carousel-nav-btn-right {
+  right: -30px;
+}
+
+/* Responsive para botones mejorados */
+@media (max-width: 768px) {
+  .carousel-nav-btn-improved {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .carousel-nav-btn-left {
+    left: -20px !important;
+  }
+  
+  .carousel-nav-btn-right {
+    right: -20px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-nav-btn-improved {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-nav-btn-left {
+    left: -15px !important;
+  }
+  
+  .carousel-nav-btn-right {
+    right: -15px !important;
+  }
+}
+
+/* Mejoras para touch/swipe en móviles */
+.featured-catalog .d-flex.gap-3.overflow-auto {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.featured-catalog .flex-shrink-0 {
+  scroll-snap-align: start;
+}
+
+/* Indicador visual para swipe en móviles */
+@media (max-width: 768px) {
+  .featured-catalog::after {
+    content: '← Desliza para ver más →';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: rgba(44, 62, 80, 0.6);
+    text-align: center;
+    opacity: 0;
+    animation: fadeInOut 3s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Mejoras para la accesibilidad en touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .carousel-nav-btn-improved {
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .carousel-nav-btn-improved:active {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(0.9);
+  }
+}
+
+/* Animación para el auto-scroll */
+@keyframes autoScrollIndicator {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
+.carousel-nav-btn-right.auto-scrolling::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  background: #25d366;
+  border-radius: 50%;
+  animation: autoScrollIndicator 2s ease-in-out infinite;
+}
+
+/* Estilos del catálogo para las tarjetas destacadas */
+.catalog-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.card-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.catalog-card .card-img-top {
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.catalog-card:hover .card-img-top {
+  transform: scale(1.08);
+}
+
+.card-overlay {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.card-overlay .badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: linear-gradient(45deg, #25d366, #20c997) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.catalog-card .card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-card .card-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.vehicle-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.detail-icon {
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.price-section {
+  margin-bottom: 1rem;
+  margin-top: auto;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #25d366, #20c997);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.view-details-btn {
+  background: linear-gradient(45deg, #2c3e50, #34495e);
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.view-details-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.view-details-btn:hover::before {
+  left: 100%;
+}
+
+.view-details-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+  background: linear-gradient(45deg, #34495e, #25d366);
+}
+
+/* Efectos adicionales para las tarjetas del catálogo */
+.catalog-card:hover .detail-item {
+  transform: translateX(3px);
+  transition: transform 0.3s ease;
+}
+
+.catalog-card:hover .price {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}

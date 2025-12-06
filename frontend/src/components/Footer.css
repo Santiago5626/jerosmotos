@@ -1,0 +1,23 @@
+.footer {
+  background-color: #222;
+  color: #f8f9fa;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.footer-logo img {
+  max-height: 50px;
+}
+
+.footer-info p {
+  margin: 0;
+}
+
+.footer-social a {
+  color: #f8f9fa;
+  transition: color 0.3s ease;
+}
+
+.footer-social a:hover {
+  color: #ffc107;
+}

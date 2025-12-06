@@ -1,0 +1,133 @@
+.home-container {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-header {
+    background: #222;
+    color: #fff;
+    padding: 2rem 1rem 1rem 1rem;
+    text-align: center;
+}
+
+.home-logo {
+    width: 400px;
+    max-width: 90vw;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home-slogan {
+    font-size: 1.1rem;
+    color: #ffc107;
+}
+
+.home-banner {
+    width: 100%;
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.home-about {
+    padding: 2rem 1rem 1rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-vitrina {
+    background: #fff;
+    padding: 2rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.vitrina-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.vehiculo-card {
+    background: #f1f3f4;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    padding: 1rem;
+    width: 220px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.vehiculo-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+}
+
+.vehiculo-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.7rem;
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    background: #25d366;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    transition: background 0.2s;
+}
+
+.whatsapp-float img {
+    width: 38px;
+    height: 38px;
+}
+
+.whatsapp-float:hover {
+    background: #128c7e;
+}
+
+.home-footer {
+    background: #222;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0 0.5rem 0;
+    margin-top: auto;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+    .vitrina-lista {
+        flex-direction: column;
+        gap: 1.2rem;
+        align-items: center;
+    }
+
+    .vehiculo-card {
+        width: 95%;
+    }
+
+    .home-banner .banner-img {
+        max-height: 180px;
+    }
+}

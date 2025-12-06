@@ -1,0 +1,87 @@
+/* Estilos para el navbar con colores dinámicos */
+.navbar-transparent {
+  background-color: transparent !important;
+  transition: all 0.4s ease;
+}
+
+/* Por defecto, links blancos para página de inicio */
+.navbar-transparent .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-transparent .nav-link:hover {
+  color: #dc3545 !important;
+}
+
+.navbar-transparent .navbar-brand {
+  color: #dc3545 !important;
+}
+
+/* Para páginas con fondo claro (catálogo, etc.) - links oscuros */
+.light-bg-page.navbar-transparent .nav-link {
+  color: #2c3e50 !important;
+}
+
+.light-bg-page.navbar-transparent .nav-link:hover {
+  color: #dc3545 !important;
+}
+
+.light-bg-page.navbar-transparent .navbar-toggler {
+  border-color: #2c3e50;
+}
+
+.light-bg-page.navbar-transparent .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2844, 62, 80, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-dark .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-dark .nav-link:hover {
+  color: #dc3545 !important;
+}
+
+.navbar-dark .navbar-brand {
+  color: #dc3545 !important;
+}
+
+/* Estilos para el botón del menú móvil - por defecto blanco para página de inicio */
+.navbar-transparent .navbar-toggler {
+  border-color: #ffffff;
+}
+
+.navbar-transparent .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-dark .navbar-toggler {
+  border-color: #ffffff;
+}
+
+.navbar-dark .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .navbar-transparent .navbar-collapse {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-dark .navbar-collapse {
+    background-color: rgba(52, 58, 64, 0.95);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
