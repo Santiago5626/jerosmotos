@@ -19,6 +19,18 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# Endpoint de ping para keep-alive (Render)
+@app.get("/ping")
+async def ping():
+    """Endpoint público para verificar que el servidor está activo"""
+    from datetime import datetime
+    return {
+        "status": "alive",
+        "timestamp": datetime.now().isoformat(),
+        "service": "jerosmotos-api"
+    }
+
+
 app.include_router(usuarios.router, prefix="/usuarios", tags=["usuarios"])
 app.include_router(sedes.router, prefix="/sedes", tags=["sedes"])
 app.include_router(vehiculos.router, prefix="/vehiculos", tags=["vehiculos"])
