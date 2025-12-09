@@ -50,7 +50,7 @@ jobs:
         if: steps.check-time.outputs.allowed == 'true'
         run: |
           echo "🔄 Haciendo ping al frontend..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://jerosmotos-frontend.onrender.com/)
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://jerosmotos.onrender.com/)
           echo "Respuesta del frontend: $response"
           
           if [ $response -eq 200 ]; then

@@ -127,7 +127,7 @@ schedule:
 ## 🔗 URLs Importantes
 
 - **Backend API**: https://jerosmotos-api.onrender.com
-- **Frontend**: https://jerosmotos-frontend.onrender.com
+- **Frontend**: https://jerosmotos.onrender.com
 - **GitHub Actions**: https://github.com/[tu-usuario]/jerosmotos/actions
 - **Render Dashboard**: https://dashboard.render.com/
 
