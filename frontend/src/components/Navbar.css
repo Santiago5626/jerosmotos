@@ -76,6 +76,15 @@
     padding: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
+
+  /* Fix for mobile menu visibility: dark text on white background */
+  .navbar-transparent .navbar-collapse .nav-link {
+    color: #333333 !important;
+  }
+
+  .navbar-transparent .navbar-collapse .nav-link:hover {
+    color: #dc3545 !important;
+  }
   
   .navbar-dark .navbar-collapse {
     background-color: rgba(52, 58, 64, 0.95);
