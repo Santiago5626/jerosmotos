@@ -55,5 +55,4 @@ Thumbs.db
 *.log
 logs/
 
-# Database (opcional - comentar si quieres incluir jerosmotos.db)
 # jerosmotos.db
